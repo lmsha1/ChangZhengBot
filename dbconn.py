@@ -9,7 +9,7 @@ LastEditTime: 2021-02-14 23:24:05
 import pymysql
 
 '''连接数据库配置'''
-conn = pymysql.connect(host='',user = "qqbot",passwd = "",db = "qqbot")
+conn = pymysql.connect(host='127.0.0.1',user = "qqbot",passwd = "0551dc3717",db = "qqbot")
 
 
 def check_cmd(user_id):
@@ -154,10 +154,10 @@ def get_latest_img_info(user_id,upload_date):
 
     return sql_ret
     
-def manual_update(ocr_times,ocr_socres,imgid):
+def manual_update(ocr_times,ocr_scores,imgid):
     #更新手动核对信息
     try:
-        params = [ocr_times,ocr_socres,imgid]
+        params = [ocr_times,ocr_scores,imgid]
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         sql = f"UPDATE imginfo SET ocr_err_code=-1,ocr_times=%s,ocr_scores=%s WHERE imgid=%s"
         conn.ping(reconnect=True)
@@ -211,6 +211,24 @@ def get_user_by_migid(imgid):
 
     return user_name
 
+def times_check(user_id):
+    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+    sql = f"SELECT ocr_times FROM imginfo WHERE user_id={user_id} ORDER BY upload_date DESC LIMIT 1"
+    conn.ping(reconnect=True)
+    cursor.execute(sql)
+    ori_ocr_scores = cursor.fetchone()['ocr_times']
+    conn.commit()
+    return ori_ocr_times
+    
+def scores_check(user_id):
+    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+    sql = f"SELECT ocr_scores FROM imginfo WHERE user_id={user_id} ORDER BY upload_date DESC LIMIT 1"
+    conn.ping(reconnect=True)
+    cursor.execute(sql)
+    ori_ocr_scores = cursor.fetchone()['ocr_scores']
+    conn.commit()
+    return ori_ocr_scores
+    
 
 
 
