@@ -170,21 +170,6 @@ def manual_update(ocr_times,ocr_scores,imgid):
     
     return flag
 
-def err_check(imgid):
-    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    sql = f"SELECT ocr_err_code FROM imginfo WHERE imgid={imgid} ORDER BY upload_date DESC LIMIT 1"
-    conn.ping(reconnect=True)
-    cursor.execute(sql)
-    try:
-        ocr_err_code = cursor.fetchone()['ocr_err_code']
-        conn.commit()
-    except:
-        flag = 0    
-    else:
-        flag = 1
-    
-    return ocr_err_code
-
 def get_user_by_migid(imgid):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     sql = f"SELECT user_id FROM imginfo WHERE imgid={imgid} ORDER BY upload_date DESC LIMIT 1"
@@ -210,24 +195,6 @@ def get_user_by_migid(imgid):
         flag = 1
 
     return user_name
-
-def times_check(user_id):
-    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    sql = f"SELECT ocr_times FROM imginfo WHERE user_id={user_id} ORDER BY upload_date DESC LIMIT 1"
-    conn.ping(reconnect=True)
-    cursor.execute(sql)
-    ori_ocr_scores = cursor.fetchone()['ocr_times']
-    conn.commit()
-    return ori_ocr_times
-    
-def scores_check(user_id):
-    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    sql = f"SELECT ocr_scores FROM imginfo WHERE user_id={user_id} ORDER BY upload_date DESC LIMIT 1"
-    conn.ping(reconnect=True)
-    cursor.execute(sql)
-    ori_ocr_scores = cursor.fetchone()['ocr_scores']
-    conn.commit()
-    return ori_ocr_scores
     
 
 
